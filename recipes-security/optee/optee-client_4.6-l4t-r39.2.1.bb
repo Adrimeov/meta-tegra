@@ -15,6 +15,8 @@ SRC_URI += "\
     file://tee-supplicant.service.in \
     file://tee-supplicant.sh.in \
     file://tee-ftpm-modprobe.service \
+    file://60-tpm-ftpm-tee.rules.in \
+    file://tpm-ftpm-tee.conf \
 "
 
 DEPENDS = "optee-os-tadevkit util-linux-libuuid"
@@ -38,6 +40,8 @@ do_compile() {
         -e's,@stripped_path@,${base_sbindir}:${base_bindir}:${sbindir}:${bindir},g' \
         -e's,@OPTEE_ENABLE_FTPM@,${OPTEE_ENABLE_FTPM},g' \
         ${UNPACKDIR}/tee-supplicant.sh.in >${B}/tee-supplicant.sh
+    sed -e's,@base_sbindir@,${base_sbindir},g' \
+        ${UNPACKDIR}/60-tpm-ftpm-tee.rules.in >${B}/60-tpm-ftpm-tee.rules
 }
 
 do_install() {
@@ -48,6 +52,8 @@ do_install() {
 
     if [ "${OPTEE_ENABLE_FTPM}" = "1" ]; then
         install -m 0644 ${UNPACKDIR}/tee-ftpm-modprobe.service ${D}${systemd_system_unitdir}/
+        install -D -m 0644 ${B}/60-tpm-ftpm-tee.rules ${D}${sysconfdir}/udev/rules.d/60-tpm-ftpm-tee.rules
+        install -D -m 0644 ${UNPACKDIR}/tpm-ftpm-tee.conf ${D}${sysconfdir}/modprobe.d/tpm-ftpm-tee.conf
     fi
 }
 

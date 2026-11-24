@@ -1,0 +1,3 @@
+# The StandaloneMM TA only appears on the TEE bus from the scan that tells
+# OP-TEE tee-supplicant is serving, which the fTPM needs to open its NV.
+ACTION=="add", SUBSYSTEM=="tee", ENV{MODALIAS}=="tee:ed32d533-99e6-4209-9cc0-2d72cdd998a7", RUN+="@base_sbindir@/modprobe tpm_ftpm_tee"

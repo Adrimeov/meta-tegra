@@ -1,13 +1,13 @@
 [Unit]
-Description=Load fTPM Module
+Description=Unload the fTPM driver before tee-supplicant stops
+# TPM2_Shutdown on unbind is the last NV write the fTPM gets.
 After=tee-supplicant.service
 BindsTo=tee-supplicant.service
-ConditionPathExists=/dev/teepriv0
 
 [Service]
 Type=oneshot
 RemainAfterExit=true
-ExecStart=modprobe --ignore-install tpm_ftpm_tee
+ExecStart=/bin/true
 ExecStop=modprobe -r tpm_ftpm_tee
 
 [Install]
